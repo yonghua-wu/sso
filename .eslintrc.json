@@ -1,12 +1,13 @@
 {
     "env": {
-        "browser": true,
-        "es6": true
+        "es6": true,
+        "node": true
     },
     "extends": "eslint:recommended",
     "globals": {
         "Atomics": "readonly",
-        "SharedArrayBuffer": "readonly"
+        "SharedArrayBuffer": "readonly",
+        "Console": "readonly"
     },
     "parserOptions": {
         "ecmaVersion": 2018
@@ -14,7 +15,7 @@
     "rules": {
         "indent": [
             "error",
-            4
+            2
         ],
         "linebreak-style": [
             "error",
@@ -27,6 +28,7 @@
         "semi": [
             "error",
             "never"
-        ]
+        ],
+        "global-require": "error"
     }
 }

@@ -5,11 +5,17 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "node app.js"
+    "dev": "export NODE_ENV=development&&node app.js",
+    "build": "export NODE_ENV=production&&node app.js",
+    "win_dev": "set NODE_ENV=development&&node app.js",
+    "win_build": "set NODE_ENV=production&&node app.js"
   },
   "author": "woxiangchixingxing",
   "license": "ISC",
   "dependencies": {
-    "koa": "^2.11.0"
+    "koa": "^2.11.0",
+    "koa-bodyparser": "^4.2.1",
+    "koa2-cors": "^2.0.6",
+    "log4js": "^6.1.0"
   }
 }
