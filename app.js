@@ -1,20 +1,21 @@
-// const Koa = require('koa')
-// const cors = require('koa2-cors')
-// const bodyParser = require('koa-bodyparser')
-// const regRouter = require('./routers.js')
-
+const Koa = require('koa')
+const cors = require('koa2-cors')
+const bodyParser = require('koa-bodyparser')
+const Routers = require('./routes/index.js')
+const CONFIG = require('./config/config.js')
 global.Console = require('./utils/Console')
 
-// const app = new Koa()
+const app = new Koa()
 
-// app.use(cors({
-//   origin: function() {
-//     return '*'
-//   },
-//   maxAge: 1728000
-// }))
+// 配置跨域
+app.use(cors({
+  origin: function() {
+    return '*'
+  },
+  maxAge: 1728000
+}))
 
-// app.use(bodyParser())
-// app.use(regRouter())
-// app.listen(18080)
-Console.log('app started at port 18080...')
+app.use(bodyParser())
+app.use(Routers.routes())
+app.listen(CONFIG.LISTEN_PORT)
+Console.log(`app started at port ${CONFIG.LISTEN_PORT}...`)
