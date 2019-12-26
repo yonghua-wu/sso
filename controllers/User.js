@@ -1,4 +1,8 @@
-// const UserModel = require('../models/User')
+const UserModel = require('../models/User')
+const CONFIG = require('../config/config')
+const crypto = require('crypto')
+const utils = require('../utils/utils')
+const md5 = crypto.createHash('md5')
 
 class User {
   /**
@@ -21,12 +25,23 @@ class User {
    */
   static async register(ctx) {
     Console.log(ctx.request.body)
-    ctx.body = {
-      code: 0,
-      message: 'ok'
+    let req = ctx.request.body
+    let params = ['email', 'password', 'nickname', 'tel']
+    let p2 = {
+      email: true,
+      password: true,
+      nickname: false,
+      tel: false
     }
+    utils.checkParams(req, params)
+    req.groupId = 2
+    req.password = md5.update(CONFIG.SERVER_SECRET + req.password).digest('hex')
+    let user = await UserModel.create(req)
+    delete user.password
+    ctx.response.status = 201
+    ctx.body = user
   }
-
+  
   /**
    * 修改用户信息
    * @param {*} ctx 

@@ -1,76 +1,78 @@
 const db = require('../config/db.js')
 const moment = require('moment')
-const Model = db.Model
+const Sequelize = require('sequelize')
+const Model = Sequelize.Model
 
 class User extends Model {}
 
 User.init({
   id: {
-    type: db.INTEGER.UNSIGNED,
+    type: Sequelize.INTEGER.UNSIGNED,
     allowNull: false,
     primaryKey: true,
     autoIncrement: true
   },
   groupId: {
-    type: db.INTEGER.UNSIGNED,
+    type: Sequelize.INTEGER.UNSIGNED,
     field: 'group_id',
     allowNull: false
   },
   email: {
-    type: db.STRING,
+    type: Sequelize.STRING,
     allowNull: false
   },
   password: {
-    type: db.STRING,
+    type: Sequelize.STRING,
     allowNull: false
   },
   nickname: {
-    type: db.STRING(45),
+    type: Sequelize.STRING(45),
     defaultValue: null
   },
   tel: {
-    type: db.STRING(45),
+    type: Sequelize.STRING(45),
     defaultValue: null
   },
   lastLoginTime: {
     field: 'last_login_time',
-    type: db.DATE,
+    type: Sequelize.DATE,
     allowNull: false,
+    defaultValue: Sequelize.NOW,
     get() {
       return moment(this.getDataValue('updatedAt')).format('YYYY-MM-DD HH:mm:ss')
     }
   },
   createdAt: {
-    type: db.DATE,
+    type: Sequelize.DATE,
     field: 'crt_time',
     allowNull: false,
+    defaultValue: Sequelize.NOW,
     get() {
       return moment(this.getDataValue('createdAt')).format('YYYY-MM-DD HH:mm:ss')
     }
   },
   updatedAt: {
     field: 'upd_time',
-    type: db.DATE,
+    type: Sequelize.DATE,
     allowNull: false,
+    defaultValue: Sequelize.NOW,
     get() {
       return moment(this.getDataValue('updatedAt')).format('YYYY-MM-DD HH:mm:ss')
     }
   }
 },{
-  db,
+  sequelize: db,
   modelName: 'users'
 })
-
+db.sync({ force: true })
 class UserModel {
   static async create(userinfo) {
-    let { groupId, email, password, lastLoginTime } = userinfo
-    await User.create({
+    let { groupId, email, password } = userinfo
+    return await User.create({
       groupId,
       email,
-      password,
-      lastLoginTime
+      password
     })
-    return true
   }
 }
 

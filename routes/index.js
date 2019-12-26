@@ -4,8 +4,14 @@ const routers = new Router({
 })
 
 const User = require('../controllers/User')
-
 routers.get('/user', User.info)
 routers.post('/user', User.register)
+routers.patch('/user', User.changeInfo)
+routers.delete('/user', User.deleteUser)
+
+const Auth = require('../controllers/Auth')
+routers.post('/auth', Auth.login)
+routers.patch('/auth', Auth.refreshAuth)
+routers.delete('/auth', Auth.loginOut)
 
 module.exports = routers
