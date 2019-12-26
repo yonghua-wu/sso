@@ -12,4 +12,11 @@ const sequelize = new Sequelize(CONFIG.SQL_INFO.DBNAME, CONFIG.SQL_INFO.USERNAME
   }
 })
 
+sequelize.authenticate().then( () => {
+  Console.log('数据库已连接')
+}).catch( err => {
+  Console.log('数据库连接失败，详情：', err)
+  throw err
+})
+
 module.exports = sequelize

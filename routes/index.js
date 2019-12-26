@@ -6,5 +6,6 @@ const routers = new Router({
 const User = require('../controllers/User')
 
 routers.get('/user', User.info)
+routers.post('/user', User.register)
 
 module.exports = routers

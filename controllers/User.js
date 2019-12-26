@@ -1,9 +1,13 @@
+// const UserModel = require('../models/User')
+
 class User {
   /**
    * 查询用户信息
    * @param {*} ctx 
    */
   static async info(ctx) {
+    Console.log(ctx)
+    ctx.response.status = 201
     ctx.body = {
       code: 200,
       message: '创建用户成功',
@@ -13,13 +17,13 @@ class User {
 
   /**
    * 注册
-   * @param {*} ctx 
+   * @param {*} ctx
    */
   static async register(ctx) {
+    Console.log(ctx.request.body)
     ctx.body = {
-      code: 200,
-      message: '创建用户成功',
-      // data: token
+      code: 0,
+      message: 'ok'
     }
   }
 
