@@ -1,8 +1,6 @@
 const UserModel = require('../models/User')
-const CONFIG = require('../config/config')
-const crypto = require('crypto')
 const utils = require('../utils/utils')
-const md5 = crypto.createHash('md5')
+
 
 class User {
   /**
@@ -10,12 +8,17 @@ class User {
    * @param {*} ctx 
    */
   static async info(ctx) {
-    Console.log(ctx)
-    ctx.response.status = 201
+    let tokenInfo = await utils.checkToken(ctx.header.authorization)
+    let userInfo = await UserModel.selectById(tokenInfo.id)
+    ctx.status = 200
     ctx.body = {
-      code: 200,
-      message: '创建用户成功',
-      // data: token
+      id: userInfo.id,
+      group_id: userInfo.groupId,
+      email: userInfo.email,
+      nickname: userInfo.nickname,
+      tel: userInfo.tel,
+      create_at: userInfo.createdAt,
+      last_login_time: userInfo.lastLoginTime
     }
   }
 
@@ -24,10 +27,8 @@ class User {
    * @param {*} ctx
    */
   static async register(ctx) {
-    Console.log(ctx.request.body)
     let req = ctx.request.body
-    let params = ['email', 'password', 'nickname', 'tel']
-    let p2 = {
+    let params = {
       email: true,
       password: true,
       nickname: false,
@@ -35,16 +36,28 @@ class User {
     }
     utils.checkParams(req, params)
     req.groupId = 2
-    req.password = md5.update(CONFIG.SERVER_SECRET + req.password).digest('hex')
+    req.password = utils.maskPassword(req.password)
+    let already = await UserModel.selectByEmail(req.email)
+    if (already) {
+      // 已存在
+      throw new HttpError(409, 'already')
+    }
     let user = await UserModel.create(req)
     delete user.password
-    ctx.response.status = 201
-    ctx.body = user
+    ctx.status = 201
+    ctx.body = {
+      id: user.id,
+      group_id: user.groupId,
+      email: user.email,
+      nickname: user.nickname,
+      tel: user.tel,
+      create_at: user.createdAt
+    }
   }
   
   /**
    * 修改用户信息
-   * @param {*} ctx 
+   * @param {*} ctx
    */
   static async changeInfo(ctx) {
     ctx.body = {

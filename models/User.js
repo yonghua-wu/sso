@@ -19,6 +19,7 @@ User.init({
   },
   email: {
     type: Sequelize.STRING,
+    unique: true,
     allowNull: false
   },
   password: {
@@ -66,12 +67,34 @@ User.init({
 })
 db.sync({ force: true })
 class UserModel {
-  static async create(userinfo) {
-    let { groupId, email, password } = userinfo
-    return await User.create({
+  static async create(info) {
+    let { groupId, email, password } = info
+    let userInfo
+    userInfo = await User.create({
       groupId,
       email,
       password
+    })
+    return userInfo
+  }
+  static async selectById(id) {
+    return await User.findByPk(id)
+  }
+  static async selectByEmail(email) {
+    let result = await User.findOne({
+      where: {
+        email
+      }
+    })
+    return result
+  }
+  static async updateLastLoginTimeById(id) {
+    await User.update({
+      lastLoginTime: Date()
+    }, {
+      where: {
+        id: id
+      }
     })
   }
 }

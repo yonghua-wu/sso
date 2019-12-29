@@ -13,6 +13,7 @@
   "author": "woxiangchixingxing",
   "license": "ISC",
   "dependencies": {
+    "jsonwebtoken": "^8.5.1",
     "koa": "^2.11.0",
     "koa-bodyparser": "^4.2.1",
     "koa-router": "^7.4.0",
