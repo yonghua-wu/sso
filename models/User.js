@@ -65,7 +65,9 @@ User.init({
   sequelize: db,
   modelName: 'users'
 })
-db.sync({ force: true })
+if (process.env.NODE_ENV === 'development') {
+  db.sync({ force: true })
+}
 class UserModel {
   static async create(info) {
     let { groupId, email, password } = info

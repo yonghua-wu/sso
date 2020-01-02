@@ -25,7 +25,11 @@ app.use((ctx, next) => {
       ctx.body = err.message
     } else {
       ctx.status = 500
-      ctx.body = err.message
+      if (process.env.NODE_ENV === 'development') {
+        ctx.body = err.message
+      } else {
+        ctx.body = 'Internal Server Error'
+      }
     }
   })
 })
