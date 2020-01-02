@@ -3,7 +3,12 @@ const UserModel = require('../models/User')
 const jwt = require('jsonwebtoken')
 const CONFIG = require('../config/config')
 
-class User {
+class Auth {
+  static async auth(ctx) {
+    await utils.checkToken(ctx.header.authorization)
+    ctx.status = 200
+    ctx.body = 'ok'
+  }
   /**
    * 登陆
    * @param {*} ctx 
@@ -23,6 +28,7 @@ class User {
         await UserModel.updateLastLoginTimeById(userInfo.id)
         let payload = {
           id: userInfo.id,
+          group_id: userInfo.groupId,
           email: userInfo.email
         }
         let accessToken = jwt.sign(payload, CONFIG.AT_SECRET, { expiresIn: CONFIG.AT_EXPIRES_IN })
@@ -64,6 +70,7 @@ class User {
     Console.log(tokenInfo)
     let accessToken = jwt.sign({
       id: tokenInfo.id,
+      group_id: tokenInfo.groupId,
       email: tokenInfo.email
     }, CONFIG.AT_SECRET, { expiresIn: CONFIG.AT_EXPIRES_IN })
     ctx.status = 200
@@ -73,4 +80,4 @@ class User {
   }
 }
 
-module.exports = User
+module.exports = Auth

@@ -60,10 +60,49 @@ class User {
    * @param {*} ctx
    */
   static async changeInfo(ctx) {
-    ctx.body = {
-      code: 200,
-      message: '创建用户成功',
-      // data: token
+    let req = ctx.request.body
+    let params = {
+      id: true,
+      password: false,
+      old_password: false,
+      nickname: false,
+      tel: false
+    }
+    utils.checkParams(req, params)
+    let tokenInfo = await utils.checkToken(ctx.header.authorization)
+    if (req.id === tokenInfo.id) {
+      if ('password' in req) {
+        if (!('old_password' in req)) {
+          throw new HttpError(400)
+        }
+        req.old_password = utils.maskPassword(req.old_password)
+        req.password = utils.maskPassword(req.password)
+        let userInfo = await UserModel.selectById(tokenInfo.id)
+        if (userInfo.password === req.old_password) {
+          await UserModel.updateById(tokenInfo.id, {
+            password: req.password
+          })
+          delete req.password
+          delete req.old_password
+        } else {
+          throw new HttpError(401)
+        }
+      }
+      if ('old_password' in req) {
+        throw new HttpError(400)
+      }
+      await UserModel.updateById(tokenInfo.id, req)
+      let userInfo = await UserModel.selectById(req.id)
+      ctx.status = 200
+      ctx.body = {
+        id: userInfo.id,
+        group_id: userInfo.groupId,
+        email: userInfo.email,
+        nickname: userInfo.nickname,
+        tel: userInfo.tel,
+      }
+    } else {
+      throw new HttpError(401)
     }
   }
 
@@ -72,10 +111,18 @@ class User {
    * @param {*} ctx 
    */
   static async deleteUser(ctx) {
-    ctx.body = {
-      code: 200,
-      message: '创建用户成功',
-      // data: token
+    let req = ctx.request.body
+    let params = {
+      id: true
+    }
+    utils.checkParams(req, params)
+    let tokenInfo = await utils.checkToken(ctx.header.authorization)
+    if (req.id === tokenInfo.id) {
+      await UserModel.deleteById(tokenInfo.id)
+      ctx.status = 204
+      ctx.body = 'deleted'
+    } else {
+      throw new HttpError(401)
     }
   }
 }

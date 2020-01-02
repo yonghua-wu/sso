@@ -97,6 +97,20 @@ class UserModel {
       }
     })
   }
+  static async deleteById(id) {
+    await User.destroy({
+      where: {
+        id: id
+      }
+    })
+  }
+  static async updateById(id, data) {
+    await User.update(data, {
+      where: {
+        id: id
+      }
+    })
+  }
 }
 
 module.exports = UserModel

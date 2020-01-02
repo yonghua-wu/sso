@@ -10,6 +10,7 @@ routers.patch('/user', User.changeInfo)
 routers.delete('/user', User.deleteUser)
 
 const Auth = require('../controllers/Auth')
+routers.get('/auth', Auth.auth)
 routers.post('/auth', Auth.login)
 routers.patch('/auth', Auth.refreshAuth)
 routers.delete('/auth', Auth.loginOut)
