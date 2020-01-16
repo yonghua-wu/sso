@@ -1,7 +1,6 @@
 const UserModel = require('../models/User')
 const utils = require('../utils/utils')
 
-
 class User {
   /**
    * 查询用户信息
@@ -102,7 +101,7 @@ class User {
         tel: userInfo.tel,
       }
     } else {
-      throw new HttpError(401)
+      throw new HttpError(403)
     }
   }
 
@@ -122,7 +121,7 @@ class User {
       ctx.status = 204
       ctx.body = 'deleted'
     } else {
-      throw new HttpError(401)
+      throw new HttpError(403)
     }
   }
 }
