@@ -7,7 +7,7 @@ class User {
    * @param {*} ctx 
    */
   static async info(ctx) {
-    let tokenInfo = await utils.checkToken(ctx.header.authorization)
+    let tokenInfo = await utils.checkToken(ctx.header.Authorization)
     let userInfo = await UserModel.selectById(tokenInfo.id)
     ctx.status = 200
     ctx.body = {
@@ -68,7 +68,7 @@ class User {
       tel: false
     }
     utils.checkParams(req, params)
-    let tokenInfo = await utils.checkToken(ctx.header.authorization)
+    let tokenInfo = await utils.checkToken(ctx.header.Authorization)
     if (req.id === tokenInfo.id) {
       if ('password' in req) {
         if (!('old_password' in req)) {
@@ -115,7 +115,7 @@ class User {
       id: true
     }
     utils.checkParams(req, params)
-    let tokenInfo = await utils.checkToken(ctx.header.authorization)
+    let tokenInfo = await utils.checkToken(ctx.header.Authorization)
     if (req.id === tokenInfo.id) {
       await UserModel.deleteById(tokenInfo.id)
       ctx.status = 204
