@@ -5,7 +5,7 @@ const CONFIG = require('../config/config')
 
 class Auth {
   static async auth(ctx) {
-    await utils.checkToken(ctx.header.Authorization)
+    await utils.checkToken(ctx.header.Authorization || ctx.header.authorization)
     ctx.status = 200
     ctx.body = 'ok'
   }
